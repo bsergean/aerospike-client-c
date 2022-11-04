@@ -293,6 +293,12 @@ as_key_set_digest(as_error* err, as_key* key)
 	}
 		
 	cf_digest_compute2(key->set, set_len, buf, size, (cf_digest*)key->digest.value);
+
+    // Now extra hack, print theh full digest
+    char output[100];
+    cf_digest_string((cf_digest*)key->digest.value, output);
+    printf("AERO_DIGEST = %s\n", output);
+
 	key->digest.init = true;
 	return AEROSPIKE_OK;
 }

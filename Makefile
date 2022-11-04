@@ -72,6 +72,9 @@ ifeq ($(OS),Darwin)
     CC_FLAGS += -I/usr/local/opt/openssl/include
   endif
 
+  # homebrew has changed location
+  CC_FLAGS += -I/opt/homebrew/Cellar/openssl@1.1/1.1.1n/include
+
   # macports openssl include path
   ifneq ($(wildcard /opt/local/include/openssl),)
     CC_FLAGS += -I/opt/local/include
