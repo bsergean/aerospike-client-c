@@ -302,6 +302,8 @@ as_key_set_digest(as_error* err, as_key* key)
     char output[100] = { 0 }; // null terminate our output buffer, so that strcmp below works
     cf_digest_string((cf_digest*)key->digest.value, output);
 
+    fprintf( stderr, "AERO_DIGEST = %s\n", output );
+
     // if ( strcmp( output, "0x1142f0217ababf9fda5b1a4de66e6e8d4e51765e" ) == 0 ) // test key
     if ( strcmp( output, "0x367ff046f7a3a057a54d9c0ad9956e5824946877" ) == 0 )
     {
