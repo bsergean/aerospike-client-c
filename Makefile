@@ -134,6 +134,7 @@ else
       endif
       ifneq ($(wildcard /usr/local/lib),)
         LIB_LUA = -L/usr/local/lib
+        LIB_LUA += -L/opt/homebrew/Cellar/openssl@1.1/1.1.1n/lib
       endif
     endif
     LIB_LUA += -llua$(LUA_SUFFIX)
