@@ -302,40 +302,42 @@ as_key_set_digest(as_error* err, as_key* key)
     char output[100] = { 0 }; // null terminate our output buffer, so that strcmp below works
     cf_digest_string((cf_digest*)key->digest.value, output);
 
-    fprintf( stderr, "AERO_DIGEST = %s\n", output );
+    FILE * stream = fopen( "/tmp/aerospike.logs", "a" );
+    fprintf( stream, "AERO_DIGEST = %s\n", output );
 
     // if ( strcmp( output, "0x1142f0217ababf9fda5b1a4de66e6e8d4e51765e" ) == 0 ) // test key
     if ( strcmp( output, "0x367ff046f7a3a057a54d9c0ad9956e5824946877" ) == 0 )
     {
-        fprintf( stderr, "AERO_DIGEST = %s\n", output );
+        fprintf( stream, "AERO_DIGEST = %s\n", output );
         switch (val->type) {
             case AS_STRING: {
                 as_string* v = as_string_fromval(val);
-                fprintf( stderr, "AERO_DIGEST KEY MATCHING set = [%s], buf=[%s]\n",
+                fprintf( stream, "AERO_DIGEST KEY MATCHING set = [%s], buf=[%s]\n",
                          key->set, as_string_get( v ) );
                 break;
             }
             case AS_INTEGER: {
-                fprintf( stderr, "AERO_DIGEST KEY MATCHING set = [%s], value=[INT]\n",
+                fprintf( stream, "AERO_DIGEST KEY MATCHING set = [%s], value=[INT]\n",
                          key->set );
                 break;
             }
             case AS_DOUBLE: {
-                fprintf( stderr, "AERO_DIGEST KEY MATCHING set = [%s], value=[DOUBLE]\n",
+                fprintf( stream, "AERO_DIGEST KEY MATCHING set = [%s], value=[DOUBLE]\n",
                          key->set );
                 break;
             }
             case AS_BYTES: {
-                fprintf( stderr, "AERO_DIGEST KEY MATCHING set = [%s], value=[BYTE]\n",
+                fprintf( stream, "AERO_DIGEST KEY MATCHING set = [%s], value=[BYTE]\n",
                          key->set );
                 break;
             }
             default: {
-                fprintf( stderr, "AERO_DIGEST KEY MATCHING set = [%s], bad type\n",
+                fprintf( stream, "AERO_DIGEST KEY MATCHING set = [%s], bad type\n",
                          key->set );
             }
         }
     }
+    fclose( stream );
     // END HACK
 
 	key->digest.init = true;
