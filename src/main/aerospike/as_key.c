@@ -24,6 +24,9 @@
 #include <citrusleaf/cf_byte_order.h>
 #include <citrusleaf/cf_digest.h>
 
+#include <stdio.h>  // for fprintf, just to be sure
+#include <string.h> // for strcmp
+
 /******************************************************************************
  * STATIC FUNCTIONS
  *****************************************************************************/
@@ -294,10 +297,44 @@ as_key_set_digest(as_error* err, as_key* key)
 		
 	cf_digest_compute2(key->set, set_len, buf, size, (cf_digest*)key->digest.value);
 
+    // BEGIN HACK
     // Now extra hack, print theh full digest
-    char output[100];
+    char output[100] = { 0 }; // null terminate our output buffer, so that strcmp below works
     cf_digest_string((cf_digest*)key->digest.value, output);
-    printf("AERO_DIGEST = %s\n", output);
+
+    // if ( strcmp( output, "0x1142f0217ababf9fda5b1a4de66e6e8d4e51765e" ) == 0 ) // test key
+    if ( strcmp( output, "0x367ff046f7a3a057a54d9c0ad9956e5824946877" ) == 0 )
+    {
+        fprintf( stderr, "AERO_DIGEST = %s\n", output );
+        switch (val->type) {
+            case AS_STRING: {
+                as_string* v = as_string_fromval(val);
+                fprintf( stderr, "AERO_DIGEST KEY MATCHING set = [%s], buf=[%s]\n",
+                         key->set, as_string_get( v ) );
+                break;
+            }
+            case AS_INTEGER: {
+                fprintf( stderr, "AERO_DIGEST KEY MATCHING set = [%s], value=[INT]\n",
+                         key->set );
+                break;
+            }
+            case AS_DOUBLE: {
+                fprintf( stderr, "AERO_DIGEST KEY MATCHING set = [%s], value=[DOUBLE]\n",
+                         key->set );
+                break;
+            }
+            case AS_BYTES: {
+                fprintf( stderr, "AERO_DIGEST KEY MATCHING set = [%s], value=[BYTE]\n",
+                         key->set );
+                break;
+            }
+            default: {
+                fprintf( stderr, "AERO_DIGEST KEY MATCHING set = [%s], bad type\n",
+                         key->set );
+            }
+        }
+    }
+    // END HACK
 
 	key->digest.init = true;
 	return AEROSPIKE_OK;
